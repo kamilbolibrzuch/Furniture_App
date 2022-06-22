@@ -10,3 +10,5 @@ class LatestPostsList(APIView):                                        #pobieran
         posts = Post.objects.all()[0:7]                                #pobiera od 0 do 7 w kolejności od najnowszych
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data, status.HTTP_200_OK)
+
+#^^^^^^^^^^^^^^^^^^^^^^^ DODAWANIE POSTÓW ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

@@ -26,10 +26,12 @@ class Post(models.Model):
     image = models.ImageField(upload_to='uploads/', blank=True, null=True) #dodawanie zdjęć do folderu uploads
     thumbnail = models.ImageField(upload_to='uploads/', blank=True, null=True) #miniaturka zdjęcia
 
-    def __str__(self):
-        return self.name
+
     class Meta:
         ordering = ('-date_added',) #odwrócenie segregacji po dacie dodania
+    
+    def __str__(self):
+        return self.name
 
     def get_absolute_url(self):                 #url dla postu z nazwą
         return f'/{self.slug}/'

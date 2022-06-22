@@ -1,30 +1,29 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
   <router-view/>
 </template>
-
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
+<script>
+import axios from 'axios'
+export default{
+  data() {
+    return{
+      authenticated: false
     }
-  }
+  },
+  beforeCreate() {
+    this.$store.commit('initializeStore') //commit uruchamia mutations z vuex o nazwie initializeStore
+    const token = this.$store.state.token
+    
+    if (token) {
+      axios.defaults.headers.common['Authorization'] = "Token" + token
+    } else {
+      axios.defaults.headers.common['Authorization'] = ""   //resetowanie tokenu 
+    }
+  },
+
 }
+</script>
+<style lang="scss">
+@import '~@/../mdb/scss/index.free.scss';
+
+
 </style>
