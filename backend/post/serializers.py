@@ -8,10 +8,11 @@ class PostSerializer(serializers.ModelSerializer):
             "id",
             "deleted",
             "date_added",
+            "author",
             "name",
             "description",
             "slug",
             "get_absolute_url",
-            "get_image"
+            "get_image",
             "get_thumbnail"
         )

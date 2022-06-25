@@ -109,7 +109,7 @@ export default {
       formData.append("description", this.description);
 
       axios
-        .post(`/api/v1/posts/`, formData, {
+        .post(`/api/furniture_app/add-post/`, formData, {
           headers: {
             Authorization: `Token ${this.$store.state.token}`,
           },

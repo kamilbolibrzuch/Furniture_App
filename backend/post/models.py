@@ -8,6 +8,7 @@ from django.utils.text import slugify
 import string
 from django.utils.crypto import get_random_string
 from django.core.validators import MinValueValidator
+from django.contrib.auth.models import User
 
 def unique_slugify(instance, slug):         #tworzenie unikalnego slugu opartego na nazwie
     model = instance.__class__
@@ -20,6 +21,7 @@ def unique_slugify(instance, slug):         #tworzenie unikalnego slugu opartego
 class Post(models.Model):
     deleted = models.BooleanField(default=False)
     date_added = models.DateTimeField(auto_now_add=True)
+    author = models.ForeignKey(User, on_delete=CASCADE, blank=True)
     name = models.CharField(max_length=255)
     slug = models.SlugField(blank=True)
     description = models.TextField(blank=True, null=True)
@@ -62,7 +64,7 @@ class Post(models.Model):
         img.convert('RGB')
         img.thumbnail(size)
         thumb_io = BytesIO()
-        img.save(thumb_io, 'JPEG', quality=85)
+        img.save(thumb_io, 'PNG', quality=85)
         thumbnail = File(thumb_io, name=image.name)
         return thumbnail
 
