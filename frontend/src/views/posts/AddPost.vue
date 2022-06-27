@@ -22,7 +22,7 @@
                   </div>
                   <!-- Alert -->
                   <!-- Formularz -->
-                  <form @submit.prevent="submitForm" v-if="!alert">
+                  <form @submit.prevent="submitForm" enctype="multipart/form-data" v-if="!alert">
                     <div class="form-floating mb-3">
                       <div class="form__group">
                         <input type="text" id="postname" class="form__field" placeholder="Nazwa postu" v-model="name" required />
@@ -39,16 +39,16 @@
                     </div>
 
                     <br /><br />
-                    <div class="container">
-                      <div class="form-group">
-                        <div class="input-group mb-3">
-                          <input type="file" class="form-control" accept=".jpg,.jpeg,.png" @change="handleFileUpload($event)"/>
-                        </div>
-                        <div class="image-preview" v-if="imagePreview.length > 0">
-                          <img class="preview" :src="imagePreview" />
-                        </div>
+                  <div class="container">
+                    <div class="form-group">
+                      <div class="input-group mb-3">
+                        <input type="file" class="form-control" accept=".jpg,.jpeg,.png" @change="handleFileUpload($event)" multiple />
+                      </div>
+                      <div class="image-preview" v-if="imagePreview.length > 0">
+                        <img class="preview" :src="imagePreview" />
                       </div>
                     </div>
+                  </div>
 
                     <p style="color: #9b9b9b">
                       * Pola oznaczone gwiazdką są obowiązkowe do poprawnego
@@ -87,7 +87,7 @@ export default {
     return {
       name: "",
       description: "",
-      image: "",
+      image: null,
       token: "",
       imagePreview: "",
       alert: false,
@@ -105,7 +105,7 @@ export default {
     submitForm() {
       let formData = new FormData();
       formData.append("name", this.name);
-      formData.append("image", this.image);
+      
       formData.append("description", this.description);
 
       axios
@@ -116,24 +116,35 @@ export default {
         })
         .then((res) => {
           console.log(res);
+          let imageformData = new FormData();
+          for (const i of Object.keys(this.image)){
+          imageformData.append("image", this.image[i]);
+          imageformData.append("name", this.image[i].name);
+          }
+          
+         
+        axios
+          .post(`/api/furniture_app/add-post/image/`, imageformData, {
+          headers: {
+            Authorization: `Token ${this.$store.state.token}`,
+          },
+        })
+        .then((res) => {
+          console.log(res);
           this.alert = true;
+          })
+        .catch((error) => {
+          console.log(error);
+        });
+          
         })
         .catch((error) => {
           console.log(error);
         });
     },
+    
     handleFileUpload(event) {
-      var input = event.target; //jeśli mamy plik
-
-      if (input.files && input.files[0]) {
-        var reader = new FileReader();
-        reader.onload = (e) => {
-          this.imagePreview = e.target.result;
-        };
-
-        reader.readAsDataURL(input.files[0]); //base64
-      }
-      this.image = event.target.files[0];
+      this.image = event.target.files
     },
   },
 };
@@ -215,4 +226,9 @@ label,
   padding-bottom: 6px;
   border-bottom: 2px solid #009788;
 }
+
+
+
+
+
 </style>

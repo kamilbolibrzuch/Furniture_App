@@ -25,9 +25,6 @@ class Post(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField(blank=True)
     description = models.TextField(blank=True, null=True)
-    image = models.ImageField(upload_to='uploads/', blank=True, null=True) #dodawanie zdjęć do folderu uploads
-    thumbnail = models.ImageField(upload_to='uploads/', blank=True, null=True) #miniaturka zdjęcia
-
 
     class Meta:
         ordering = ('-date_added',) #odwrócenie segregacji po dacie dodania
@@ -45,6 +42,27 @@ class Post(models.Model):
             self.slug = unique_slugify(self, slug)
         super(Post, self).save(*args, **kwargs)
 
+
+#~~~~~~~MODEL ZDJĘCIA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
+class Image(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    edited = models.DateTimeField(auto_now_add=True)
+    name = models.CharField(max_length=255)
+    slug = models.SlugField(blank=True)
+    deleted = models.BooleanField(default=False)
+    image = models.ImageField(upload_to='uploads/', blank=True, null=True) #dodawanie zdjęć do folderu uploads
+    thumbnail = models.ImageField(upload_to='uploads/', blank=True, null=True) #miniaturka zdjęcia
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='post')#klucz obcy do postu
+    
+    def __str__(self):
+        return self.name
+    class Meta:
+        ordering = ('-created',)
+    def save(self, *args, **kwargs):            #przy zapisie tworzy slug z nazwy (jeśli występował wykorzystuje metode unique_slugify)
+        if not self.slug:
+            slug = slugify(self.name)
+            self.slug = unique_slugify(self, slug)
+        super(Image, self).save(*args, **kwargs)
     def get_image(self):                        #zwraca zdjęcie główne w lepszej jakości
         if self.image:
             return 'http://127.0.0.1:8000' + self.image.url
@@ -67,6 +85,5 @@ class Post(models.Model):
         img.save(thumb_io, 'PNG', quality=85)
         thumbnail = File(thumb_io, name=image.name)
         return thumbnail
-
     
 

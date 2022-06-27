@@ -4,7 +4,8 @@
     <!-- komponent nawigacji -->
     <div class="home">
       <div class="text-center" id="background_" style="height: 20em">
-        <h1 style=" color: white; padding-top: 25px; font-size: 55px; text-shadow: 2px 2px 4px #000000;">Nazwa firmy</h1>
+        <h1 style=" color: white; padding-top: 25px; font-size: 55px; text-shadow: 2px 2px 4px #000000;">Nazwa firmy
+        </h1>
         <p style="color: white; padding-top: 175px; font-size: 25px; text-shadow: 2px 2px 4px #000000;">Jakiś napis</p>
       </div>
 
@@ -20,9 +21,9 @@
             </h4>
 
             <LatestPostsComponent></LatestPostsComponent>
-            </section>
+          </section>
 
-      
+
         </div>
       </main>
       <!--Main layout-->
@@ -35,11 +36,11 @@
         <!-- Copyright -->
         <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
           © 2022 Copyright:
-          <a class="text-dark">Zaadoptujzwierzaka.pl</a>
+          <a class="text-dark">FurnitureApp.pl</a>
         </div>
         <!-- Copyright -->
       </footer>
-      <!--Footer-->
+      <!--Stopka-->
     </div>
   </div>
 </template>
@@ -48,15 +49,10 @@
 import Navbar from "@/components/ui/Navbar.vue";
 import LatestPostsComponent from "@/components/posts/LatestPostsComponent";
 import { mdbRipple, MDBBtnGroup, MDBBtn } from "mdb-vue-ui-kit";
-import axios from "axios";
 export default {
   name: "Home",
   data() {
     return {
-      dogs: 0,
-      adopted_dogs: 0,
-      cats: 0,
-      adopted_cats: 0,
     };
   },
   components: {
@@ -74,7 +70,7 @@ export default {
     mdbRipple,
   },
   methods: {
-   
+
   },
 };
 </script>
@@ -112,19 +108,21 @@ export default {
 #przycisk:hover span {
   padding-right: 25px;
 }
+
 #przycisk:hover span:after {
   opacity: 1;
   right: 0;
 }
+    
 #background_ {
   background-color: rgb(13, 89, 89);
   background-size: cover;
 }
+
 @media screen and (max-width: 500px) {
   #background_ {
-    
+
     background-size: cover;
   }
 }
-
 </style>
