@@ -6,7 +6,7 @@
             <MDBCard class="shadow-custom " style="border-radius: 10px;" >
               <div class="bg-image" >
               
-                <MDBCardImg id="zdjecie" class="img-fluid" v-bind:src="post.get_thumbnail"   />
+                <MDBCardImg id="zdjecie" class="img-fluid" v-bind:src="post.image.at(-1).get_thumbnail"/>
               </div>
               <MDBCardBody class="card-body">
                 <MDBCardTitle class="card-title" style="text-decoration: none; color:black;" >{{ post.name }}</MDBCardTitle>
@@ -72,7 +72,7 @@ export default {
         .get('api/furniture_app/latest-posts/')
         .then(response => {
           this.latestPosts = response.data
-          console.table(this.latestPosts);
+          console.log(this.latestPosts[0].image[0].get_thumbnail);
           
         })
         .catch(error => {

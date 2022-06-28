@@ -44,7 +44,7 @@ class Post(models.Model):
 
 
 #~~~~~~~MODEL ZDJĘCIA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-class Image(models.Model):
+class Photo(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     edited = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=255)
@@ -62,7 +62,7 @@ class Image(models.Model):
         if not self.slug:
             slug = slugify(self.name)
             self.slug = unique_slugify(self, slug)
-        super(Image, self).save(*args, **kwargs)
+        super(Photo, self).save(*args, **kwargs)
     def get_image(self):                        #zwraca zdjęcie główne w lepszej jakości
         if self.image:
             return 'http://127.0.0.1:8000' + self.image.url

@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Post,Image
-from .serializers import PostSerializer,PostImagesSerializer
+from .models import Post,Photo
+from .serializers import PostSerializer,PostPhotosSerializer
 from django.http import Http404
 from rest_framework import status
 from datetime import datetime
@@ -25,8 +25,6 @@ class PostsListView(APIView):
         serializer = PostSerializer(data=data)                          #standarrdowy serializer dla postów
         if serializer.is_valid():
             post = serializer.save()
-           # if 'image' in data:
-            #    post.image = data['image']
             post.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)        #dodano
         return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)   #błędne dane
@@ -34,18 +32,17 @@ class PostsListView(APIView):
 class PostImagesListView(APIView):
     def post(self, request, format=None):
         post = Post.objects.latest('id').id
-        data = self.request.data
         images=request.FILES.getlist('image')
         
         img_table = []
         for image in images:
-            post_image = Image.objects.create(
+            post_photo = Photo.objects.create(
                 post=Post.objects.latest('id'),
                 image=image,
-                name=data['name'],)
-                post_image.save()
-            img_table.append(post_image)
+                name=image.name)
+            post_photo.save()
+            img_table.append(post_photo)
             
-        serializer = PostImagesSerializer(img_table,many=True )
+        serializer = PostPhotosSerializer(img_table,many=True )
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         return Response(data=serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)

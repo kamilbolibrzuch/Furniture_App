@@ -103,9 +103,9 @@ export default {
   },
   methods: {
     submitForm() {
+  //!!!!!!NAJPIERW DODANIE DO POSTA/////////////////////////////
       let formData = new FormData();
       formData.append("name", this.name);
-      
       formData.append("description", this.description);
 
       axios
@@ -114,21 +114,23 @@ export default {
             Authorization: `Token ${this.$store.state.token}`,
           },
         })
+//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!/      
         .then((res) => {
           console.log(res);
+//~~~~~~~~~~~NASTEPNIE DODANIE ZDJEĆ/////////////////////////////////          
           let imageformData = new FormData();
-          for (const i of Object.keys(this.image)){
-          imageformData.append("image", this.image[i]);
-          imageformData.append("name", this.image[i].name);
+          for (const i of Object.keys(this.image))
+          {
+            imageformData.append("image", this.image[i]);
+            imageformData.append("name", this.image[i].name);
           }
-          
-         
         axios
           .post(`/api/furniture_app/add-post/image/`, imageformData, {
           headers: {
             Authorization: `Token ${this.$store.state.token}`,
           },
         })
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/               
         .then((res) => {
           console.log(res);
           this.alert = true;

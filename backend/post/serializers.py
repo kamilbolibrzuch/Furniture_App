@@ -1,6 +1,6 @@
 from django.db.models import fields
 from rest_framework import serializers
-from .models import Post, Image
+from .models import Post, Photo
 class PostSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField(read_only=True)
 
@@ -21,12 +21,22 @@ class PostSerializer(serializers.ModelSerializer):
 
     def get_image(self,obj):
         try:
-            images = Image.objects.filter(post=obj.id, deleted=False).all()
-            return PostImagesSerializer(images, many=True).data
+            images = Photo.objects.filter(post=obj.id, deleted=False).all()
+            return PostPhotosSerializer(images, many=True).data
         except:
             return ''
 
-class PostImagesSerializer(serializers.ModelSerializer):
+class PostPhotosSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Image
-        fields = '__all__'
+        model = Photo
+        fields = (
+            "id",
+            "created",
+            "edited",
+            "name",
+            "slug",
+            "deleted",
+            "get_image",
+            "get_thumbnail",
+            "post",
+        )
