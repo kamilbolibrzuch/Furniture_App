@@ -63,7 +63,7 @@ export default {
   },
 
   beforeMount() {
-    document.title = "Zaadoptuj-zwierzaka";
+    document.title = "Strona głowna";
 
   },
   directives: {

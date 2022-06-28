@@ -12,7 +12,7 @@
                 <MDBCardTitle class="card-title" style="text-decoration: none; color:black;" >{{ post.name }}</MDBCardTitle>
                 <MDBCardTitle class="card-title zdjecie-text1_pies" >{{ post.name }}</MDBCardTitle><br>
                 
-                <span style="color: white"><router-link v-bind:to="post.get_absolute_url" class="btn" id="btn_pies">szczegóły</router-link></span>
+                <span style="color: white"><router-link v-bind:to="post.get_absolute_url" class="btn" id="btn_post">szczegóły</router-link></span>
               </MDBCardBody>
             </MDBCard>
           </router-link>
@@ -21,11 +21,11 @@
 
      <!-- Zobacz więcej postów -->
         <div class="col-lg-3 col-md-6 mb-4 card-box" >
-          <MDBCard class="shadow-custom" style="border-radius: 10px;" id="background_dog">
-            <router-link to="/posts/1/order_by=from-newest" >
+          <MDBCard class="shadow-custom" style="border-radius: 10px;" id="background_post">
+            <router-link to="" >
               <div class="bg-image">
                 <div  id="zdj_wiecej" class="img-fluid">
-                  <div id="wiecej_psow"><b><br>Zobacz więcej<br>postów</b></div>
+                  <div id="wiecej_postow"><b><br>Zobacz więcej<br>postów</b></div>
                 </div>
               </div>
               <MDBCardBody class="card-body">
@@ -33,6 +33,7 @@
             </router-link>
           </MDBCard>
         </div>
+     <!-- ------------------- -->  
     </div>
 </template>
 
@@ -71,14 +72,11 @@ export default {
       await axios
         .get('api/furniture_app/latest-posts/')
         .then(response => {
-          this.latestPosts = response.data
-          console.log(this.latestPosts[0].image[0].get_thumbnail);
-          
+          this.latestPosts = response.data          
         })
         .catch(error => {
           console.log(error)
         })
-      //this.$store.commit('setIsLoading', false) 
     }
 }
 }
@@ -154,7 +152,7 @@ export default {
   text-shadow: white 0.1em 0.1em 0.2em
 }
 
-#btn_pies {
+#btn_post {
   color: #ffff;
   text-decoration: none;
   background: #5b2c6f;
@@ -164,7 +162,7 @@ export default {
   border: none;
   transition: all 0.4s ease 0s;
 }
-#btn_pies:hover {
+#btn_post:hover {
   background: #2d57b1;
   letter-spacing: 1px;
   color: aliceblue;
@@ -174,7 +172,7 @@ export default {
   transition: all 0.4s ease 0s;
 }
 
-#wiecej_psow {
+#wiecej_postow {
 text-shadow: 2px 2px 4px #000000;
   font-size: 50px;
   color:rgb(88, 77, 149);
@@ -193,13 +191,5 @@ border-radius: 10px;
           width: 350px;
           height: 300px;
 }
-
-
-
-
-  
- 
-        
-
 
 </style>

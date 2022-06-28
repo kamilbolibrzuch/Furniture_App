@@ -4,7 +4,7 @@ import LogIn from '../views/account/LogIn.vue'
 import HomeView from '../views/HomeView.vue'
 import AddPost from '../views/posts/AddPost.vue'
 import store from '../store' //importujemy store aby sprawdzić nasz state -> czyli czy jesteśmy zalogowani
-
+import PostDetail from '../views/posts/PostDetail.vue'
 
 const routes = [
   {
@@ -33,6 +33,17 @@ const routes = [
       requireLogin: true //aby wejść wymagane jest zalogowanie się
   }
   },
+  {
+    path: '/:post_slug/',
+    name: 'PostDetail',
+    component: PostDetail,
+    meta: {
+      requireLogin: true //aby wejść wymagane jest zalogowanie się
+  }
+  },
+
+
+
   {
     path: '/about',
     name: 'about',
