@@ -157,7 +157,7 @@ export default {
   text-decoration: none;
   background: #5b2c6f;
   padding: 30px;
-  border-radius: 10px;
+  border-radius: 5px;
   display: inline-block;
   border: none;
   transition: all 0.4s ease 0s;
