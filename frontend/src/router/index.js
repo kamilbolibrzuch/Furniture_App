@@ -5,54 +5,23 @@ import HomeView from '../views/HomeView.vue'
 import AddPost from '../views/posts/AddPost.vue'
 import store from '../store' //importujemy store aby sprawdzić nasz state -> czyli czy jesteśmy zalogowani
 import PostDetail from '../views/posts/PostDetail.vue'
-
+import Posts from '../views/posts/Posts.vue'
 const routes = [
-  {
-    path: '/',
-    name: 'home',
-    component: HomeView,
-    meta: {
-      requireLogin: true //aby wejść wymagane jest zalogowanie się
-  }
-  },
-  {
-    path: '/sign-up',
-    name: 'SignUp',
-    component: SignUp
-  },
-  {
-      path: '/log-in',
-      name: 'LogIn',
-      component: LogIn
-  },
-  {
-    path: '/add-post',
-    name: 'AddPost',
-    component: AddPost,
-    meta: {
-      requireLogin: true //aby wejść wymagane jest zalogowanie się
-  }
-  },
-  {
-    path: '/:post_slug/',
-    name: 'PostDetail',
-    component: PostDetail,
-    meta: {
-      requireLogin: true //aby wejść wymagane jest zalogowanie się
-  }
-  },
 
-
-
-  {
-    path: '/about',
-    name: 'about',
-    meta: {
-      requireLogin: true //aby wejść wymagane jest zalogowanie się
+  { path: '/sign-up', name: 'SignUp', component: SignUp},                             //REJESTRACJA
+  { path: '/log-in', name: 'LogIn', component: LogIn},                                //LOGOWANIE
+  { path: '/', name: 'home', component: HomeView,                                     //STRONA GŁÓWNA
+    meta: { requireLogin: true }//aby wejść wymagane jest zalogowanie się
   },
-
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue')
-  }
+  { path: '/add-post', name: 'AddPost', component: AddPost,                           //DODAWANIE POSTU
+    meta: {requireLogin: true }
+  },
+  { path: '/:post_slug', name: 'PostDetail', component: PostDetail,                   //DETALE POSTU
+    meta: { requireLogin: true }
+  },
+  { path: '/posts/:pagenumber/:order_by', name: 'Posts', component: Posts,            //POSTY Z PAGINACJĄ
+    meta: { requireLogin: true }
+  },
 ]
 
 const router = createRouter({

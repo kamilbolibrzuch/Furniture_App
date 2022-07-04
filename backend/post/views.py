@@ -7,6 +7,8 @@ from django.http import Http404
 from rest_framework import status
 from datetime import datetime
 from django.shortcuts import render, get_object_or_404
+from django.core.paginator import Paginator
+from django.db.models import Q
 
 #???????????? POBIERANIE 7 NAJNOWSZYCH NA STRONĘ GŁÓWNĄ ????????????????????????????????????????????????????????????????????????????????????????
 class LatestPostsList(APIView):                                         #pobieranie ostatnio dodanych
@@ -16,8 +18,7 @@ class LatestPostsList(APIView):                                         #pobiera
         return Response(serializer.data, status.HTTP_200_OK)
 
 #^^^^^^^^^^^^^^^^^^^^^^^ DODAWANIE POSTÓW ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-class PostsListView(APIView):
+class AddPost(APIView):
     def post(self, request, *args, **kwargs):                               #dodawanie postów przez użytkownika
         data = self.request.data.copy()
         data['author'] = self.request.user.id                           #pobieramy id użytkownika (zalogowanego) który dodaje post, jako id authora
@@ -27,6 +28,19 @@ class PostsListView(APIView):
             post.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)        #dodano
         return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)   #błędne dane
+#!!!!!!!!!!!!!!!!!!!!!!POBIERANIE POSTÓW Z PAGINACJĄ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+class GetPosts(APIView):
+    def get(self, request, format=None):
+        posts = Post.objects.filter(Q(deleted=False))                                   #pobieramy tylko te które nie są usunięte
+        page_number = self.request.query_params.get('page_number', 1)                   #pobieramy z parametu numer strony aktualnie 1
+        page_size = self.request.query_params.get('page_size', 10)                      #pobieramy ilość elementów na stronie aktualnie 10
+        paginator = Paginator(posts, page_size)                                         #paginator sam dzieli ilość postów na podstawie page_size i zwraca aktualnie wybrane wyniki np pierwsze 10
+        serializer = PostSerializer(paginator.page(page_number), many=True)
+        data={}
+        data['results'] = serializer.data                                               #zwracamy wwyniki
+        data['page_numbers'] = paginator.num_pages                                      #zwracamy informacje ile wszystkich ,,podstron" jeszcze istnieje
+        data['next_page'] = False if int(page_number) >= paginator.num_pages else True  #zwracamy informacje że istnieje kolejna podstrona do której możemy przejść
+        return Response(data, status=status.HTTP_200_OK)                                #poprawnie pobrano
 #**********************POBIERANIE KONKRETNEGO POSTU NA PODSTAWIE SLUG'A *************************************************************************
 class PostDetail(APIView):
     def get_object(self, post_slug):
@@ -42,7 +56,7 @@ class PostDetail(APIView):
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~DODAWANIE ZDJĘĆ DO POSTÓW ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-class PostImagesListView(APIView):
+class AddPostImages(APIView):
     def post(self, request, format=None):
         post = Post.objects.latest('id').id                         #dodaje do ostatnio dodanego postu (ostatnie id)
         images=request.FILES.getlist('image')                       #tworzy listę zdjęć

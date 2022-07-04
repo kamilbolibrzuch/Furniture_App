@@ -33,7 +33,7 @@ class Post(models.Model):
         return self.name
 
     def get_absolute_url(self):                 #url dla postu z nazwą
-        return f'/{self.slug}/'
+        return f'/{self.slug}'
 
 
     def save(self, *args, **kwargs):            #przy zapisie tworzy slug z nazwy (jeśli występował wykorzystuje metode unique_slugify)

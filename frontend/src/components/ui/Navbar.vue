@@ -10,8 +10,8 @@
         <MDBNavbarItem to="/add-post" >
           <router-link to="/add-post" style="color:white;">Dodaj post</router-link>
         </MDBNavbarItem>
-        <MDBNavbarItem to="/post/1/order_by=from-newest" >
-          <router-link to="/post/1/order_by=from-newest" style="color:white;">Przeglądaj posty</router-link>
+        <MDBNavbarItem to="/posts/1/order_by=from-newest" >
+          <router-link to="/posts/1/order_by=from-newest" style="color:white;">Przeglądaj posty</router-link>
         </MDBNavbarItem>
         <MDBNavbarNav>
         <MDBNavbarItem>

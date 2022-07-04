@@ -22,7 +22,7 @@
      <!-- Zobacz więcej postów -->
         <div class="col-lg-3 col-md-6 mb-4 card-box" >
           <MDBCard class="shadow-custom" style="border-radius: 10px;" id="background_post">
-            <router-link to="" >
+            <router-link to="/posts/1/order_by=from-newest" >
               <div class="bg-image">
                 <div  id="zdj_wiecej" class="img-fluid">
                   <div id="wiecej_postow"><b><br>Zobacz więcej<br>postów</b></div>

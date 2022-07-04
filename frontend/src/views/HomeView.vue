@@ -61,11 +61,10 @@ export default {
     MDBBtnGroup,
     MDBBtn,
   },
-
-  beforeMount() {
-    document.title = "Strona głowna";
-
+  mounted(){
+document.title = "Strona głowna";
   },
+
   directives: {
     mdbRipple,
   },
