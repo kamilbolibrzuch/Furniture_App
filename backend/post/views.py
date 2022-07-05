@@ -30,10 +30,20 @@ class AddPost(APIView):
         return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)   #błędne dane
 #!!!!!!!!!!!!!!!!!!!!!!POBIERANIE POSTÓW Z PAGINACJĄ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 class GetPosts(APIView):
-    def get(self, request, format=None):
-        posts = Post.objects.filter(Q(deleted=False))                                   #pobieramy tylko te które nie są usunięte
+    def post(self, request, format=None):
+        order_by = self.request.query_params.get('order_by')                            #pobieramy rodzaj sortowania postów
+        if order_by == 'from-newest':
+            posts = Post.objects.filter(Q(deleted=False))                                   #pobieramy tylko te które nie są usunięte
+        if order_by == 'from-oldest':
+            posts = Post.objects.filter(Q(deleted=False)).order_by('date_added')            #pobieramy tylko te które nie są usunięte od najstarszych
+        if order_by == 'alphabetical':
+            posts = Post.objects.filter(Q(deleted=False)).order_by('name')                  #pobieramy tylko te które nie są usunięte według nazwy   
+        if order_by == 'alphabetical-reverse':
+            posts = Post.objects.filter(Q(deleted=False)).order_by('-name')                 #pobieramy tylko te które nie są usunięte według nazwy (odwrócone od Z-A)          
         page_number = self.request.query_params.get('page_number', 1)                   #pobieramy z parametu numer strony aktualnie 1
         page_size = self.request.query_params.get('page_size', 10)                      #pobieramy ilość elementów na stronie aktualnie 10
+
+
         paginator = Paginator(posts, page_size)                                         #paginator sam dzieli ilość postów na podstawie page_size i zwraca aktualnie wybrane wyniki np pierwsze 10
         serializer = PostSerializer(paginator.page(page_number), many=True)
         data={}

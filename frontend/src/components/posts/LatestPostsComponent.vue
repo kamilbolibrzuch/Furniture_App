@@ -10,7 +10,7 @@
               </div>
               <MDBCardBody class="card-body">
                 <MDBCardTitle class="card-title" style="text-decoration: none; color:black;" >{{ post.name }}</MDBCardTitle>
-                <MDBCardTitle class="card-title zdjecie-text1_pies" >{{ post.name }}</MDBCardTitle><br>
+                <MDBCardTitle class="card-title zdjecie-text1_post" >{{ post.name }}</MDBCardTitle><br>
                 
                 <span style="color: white"><router-link v-bind:to="post.get_absolute_url" class="btn" id="btn_post">szczegóły</router-link></span>
               </MDBCardBody>
@@ -117,11 +117,11 @@ export default {
 .shadow-custom{
      box-shadow: 0 2px 20px 0 rgba(0, 0, 0, .25), 0 3px 8px 0px rgba(0, 0, 0, 0.13) !important;
 }
-.card-box:hover .zdjecie-text1_pies,.card-box:hover .zdjecie-text2 {
+.card-box:hover .zdjecie-text1_post,.card-box:hover .zdjecie-text2 {
   visibility: visible;
   opacity: 1;
 }
-.zdjecie-text1_pies {
+.zdjecie-text1_post {
   font-size: 40px;
   position: absolute;
   top: 10%;
