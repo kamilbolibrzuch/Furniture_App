@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <!--~~~~~~~~~~SORTOWANIE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-    <div class="col-lg-10 col-md-7 mb-4 mx-auto">
+    <div class="col-lg-10 col-md-7 mb-4 mx-auto">    
       Sortuj:
       <div class="col-lg-3 col-md-7 mb-3" style="display: inline-block">
         <select class="form-control" id="sortowanie" name="sortowanie" @change="sortowanie($event)">
@@ -11,18 +11,37 @@
           <option>Alfabetycznie: Z-A</option>
         </select>
       </div>
+    <!--~~~~~~~~~~WYBÓR WIDOKU~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->  
+    <div class="bar " style="display: inline-block; padding-left: 10px;">
+		<a class="list-icon" v-bind:class="{ 'active': layout == 'list'}" v-on:click="layout = 'list'" data-toggle="tooltip"  title="Widok listy"></a>
+		<a class="grid-icon" v-bind:class="{ 'active': layout == 'grid'}" v-on:click="layout = 'grid'" data-toggle="tooltip"  title="Widok kafelkowy"></a>
+	</div>
+    <!--~~~~~~~~~~WYBÓR WIDOKU~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --> 
       <!--~~~~~~~~~~SORTOWANIE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-      <!--~~~~~~~~~~POSTY~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-      <br />
-      <br />
-      <h2 v-if="data.results == ''" style="color: red">
-        Niestety nie znaleziono żadnych wyników, dla zastosowanych filtrów.
-      </h2>
-      <br />
+
+    <!--~~~~~~~~~~POSTY~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+      <!--~~~~~~~~~~WIDOK LISTY~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --> 
       <div class="row">
-        <div class="col-lg-3 col-md-6 mb-4 card-box" v-for="post in data.results" v-bind:key="post.id">
+        <ul v-if="layout == 'list'" class="list">
+            <li v-for="post in data.results" v-bind:key="post.id" >
+            <router-link v-bind:to="post.get_absolute_url">
+                <div>
+                <a v-bind:to="post.get_absolute_url" target="_blank"><img v-bind:src="post.image.at(-1).get_thumbnail" /></a>
+                <p style="text-decoration: none; color: black">{{post.name}}</p></div>
+            </router-link>
+            </li>
+        </ul>
+        <br />
+        <br />
+        <h2 v-if="data.results == ''" style="color: red">
+            Niestety nie znaleziono żadnych wyników, dla zastosowanych filtrów.
+        </h2>
+        <br />
+      <!--~~~~~~~~~~WIDOK LISTY~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+      <!--~~~~~~~~~~WIDOK KAFELKÓW~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <div class="col-lg-3 col-md-6 mb-4 card-box" v-for="post in data.results" v-bind:key="post.id" >
           <router-link v-bind:to="post.get_absolute_url">
-            <MDBCard class="shadow-custom" style="border-radius: 10px">
+            <MDBCard class="shadow-custom" style="border-radius: 10px" v-if="layout =='grid'">
               <div class="bg-image">
                 <MDBCardImg id="zdjecie" class="img-fluid" v-bind:src="post.image.at(-1).get_thumbnail"/>
               </div>
@@ -37,7 +56,8 @@
             </MDBCard>
           </router-link>
         </div>
-        <!--~~~~~~~~~~POSTY~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+      <!--~~~~~~~~~~WIDOK KAFELKÓW~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+      <!--~~~~~~~~~~POSTY~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <!--~~~~~~~~~~PAGINACJA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <nav v-if="data.results != ''" aria-label="pagination" class="pagination justify-content-center" style="margin: 20px 0">
           <ul class="pagination">
@@ -72,6 +92,7 @@ export default {
       pageItemClass: "page-item",
       activeClass: "active",
       selected_sort: "",
+      layout: 'grid',
     };
   },
   components: {
@@ -115,3 +136,61 @@ export default {
   },
 };
 </script>
+
+<style>
+
+.bar a{
+	background:#bebebe center center no-repeat;
+	width:35px;
+	height:35px;
+	display:inline-block;
+	
+	margin-right:5px;
+	
+	cursor:pointer;
+}
+
+.bar a.active{
+	background-color:#4a46c1;
+}
+
+.bar a.list-icon{
+	background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkYzNkFCQ0ZBMTBCRTExRTM5NDk4RDFEM0E5RkQ1NEZCIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkYzNkFCQ0ZCMTBCRTExRTM5NDk4RDFEM0E5RkQ1NEZCIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6RjM2QUJDRjgxMEJFMTFFMzk0OThEMUQzQTlGRDU0RkIiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6RjM2QUJDRjkxMEJFMTFFMzk0OThEMUQzQTlGRDU0RkIiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz7h1bLqAAAAWUlEQVR42mL8////BwYGBn4GCACxBRlIAIxAA/4jaXoPEkMyjJ+A/g9MDJQBRhYg8RFqMwg8RJIUINYLFDmBUi+ADQAF1n8ofk9yIAy6WPg4GgtDMRYAAgwAdLYwLAoIwPgAAAAASUVORK5CYII=);
+}
+
+.bar a.grid-icon{
+	background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjBEQkMyQzE0MTBCRjExRTNBMDlGRTYyOTlBNDdCN0I4IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjBEQkMyQzE1MTBCRjExRTNBMDlGRTYyOTlBNDdCN0I4Ij4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6MERCQzJDMTIxMEJGMTFFM0EwOUZFNjI5OUE0N0I3QjgiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6MERCQzJDMTMxMEJGMTFFM0EwOUZFNjI5OUE0N0I3QjgiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz4MjPshAAAAXklEQVR42mL4////h/8I8B6IGaCYKHFGEMnAwCDIAAHvgZgRyiZKnImBQsACxB+hNoDAQyQ5osQZIT4gH1DsBZABH6AB8x/JaQzEig++WPiII7Rxio/GwmCIBYAAAwAwVIzMp1R0aQAAAABJRU5ErkJggg==);
+}
+
+/*-------------------------
+	Widok listy
+--------------------------*/
+
+ul.list{
+	list-style: none;
+	width: 100%;
+	margin: 0 auto;
+	text-align: right;
+}
+
+ul.list li{
+	border-bottom: 1px solid #ddd;
+	padding: 10px;
+	overflow: hidden;
+}
+
+ul.list li img{
+	width:200px;
+	height:200px;
+	float:left;
+	border:none;
+}
+
+ul.list li p{
+	margin-left: 60%;
+	font-weight: bold;
+	
+}
+
+
+</style>
