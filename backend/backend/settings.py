@@ -1,8 +1,15 @@
 from pathlib import Path
 import os
+
+import environ
+# Initialise environment variables
+env = environ.Env()
+environ.Env.read_env()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+PUBLIC_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+ANOTHER_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -13,7 +20,7 @@ SECRET_KEY = 'django-insecure-qo-#i369-d*etz(w430pi=4u-6^g9^b12bsvojntj$$!$-c0wh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['furnitureapp.pl', 'www.furnitureapp.pl']
 
 
 # Application definition
@@ -30,22 +37,18 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'djoser',
-    'post',
+    'post.apps.PostConfig',
+    'product',
 
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8080",
-    "http://localhost:8080",
-    "http://192.168.1.15:8080"
-]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -84,7 +87,7 @@ ROOT_URLCONF = 'backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,'templates')],
+        'DIRS': [os.path.join(ANOTHER_DIR,'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -106,10 +109,10 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE':'django.db.backends.postgresql',
-        'NAME':'furniture_app_db',
-        'USER':'postgres',
-        'PASSWORD':'admin',
-        'HOST':'localhost',
+        'NAME':'p1448_furniture',
+        'USER':'p1448_furniture',
+        'PASSWORD':'Niechmocbedziewhasle1999',
+        'HOST':'pgsql39.mydevil.net',
         'PORT':'5432',
     }
 }
@@ -156,13 +159,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media/'
-STATICFILES_DIRS = [
-        os.path.join(BASE_DIR, 'assets'),
-    ]
+STATIC_ROOT = os.path.join(PUBLIC_DIR, 'public', 'static')  
+MEDIA_ROOT = os.path.join(PUBLIC_DIR , 'public', 'media')
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CORS_ORIGIN_ALLOW_ALL = True

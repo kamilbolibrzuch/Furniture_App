@@ -65,16 +65,16 @@ class Photo(models.Model):
         super(Photo, self).save(*args, **kwargs)
     def get_image(self):                        #zwraca zdjęcie główne w lepszej jakości
         if self.image:
-            return 'http://127.0.0.1:8000' + self.image.url
+            return  self.image.url
         return ''
     def get_thumbnail(self):
         if self.thumbnail:
-            return 'http://127.0.0.1:8000' + self.thumbnail.url
+            return  self.thumbnail.url
         else:
             if self.image:
                 self.thumbnail = self.make_thumbnail(self.image)
                 self.save()
-                return 'http://127.0.0.1:8000' + self.thumbnail.url
+                return  self.thumbnail.url
             else:
                 return ''
     def make_thumbnail(self, image, size=(300,200)):
