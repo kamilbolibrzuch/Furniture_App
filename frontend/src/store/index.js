@@ -50,6 +50,18 @@ export default createStore({
           state.user.username = username
       },
 
+
+      LogOutUser(state){
+        state.user.username='';
+        state.user.id=0;
+        state.token = '';
+        state.isAuthenticated=false;
+        localStorage.removeItem('token');
+        localStorage.removeItem('username');
+        localStorage.removeItem('profile_slug')
+        localStorage.removeItem('id')
+      }
+
   },
   actions: {
   },

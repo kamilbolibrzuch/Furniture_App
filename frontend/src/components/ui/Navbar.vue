@@ -20,7 +20,7 @@
             <MDBDropdownToggle tag="a" class="nav-link" @click="dropdown1 = !dropdown1">
               </MDBDropdownToggle>
             <MDBDropdownMenu aria-labelledby="dropdownMenuButton">
-              <MDBDropdownItem :href="'/profile/' + user_slug + '/'"><router-link :to="'/profile/' + user_slug + '/'" style="color:black;">Mój profil</router-link></MDBDropdownItem>
+              <MDBDropdownItem :href="'/log-out'"><router-link :to="'/log-out'" style="color:black;">Wyloguj</router-link></MDBDropdownItem>
             </MDBDropdownMenu>
           </MDBDropdown>
         </MDBNavbarItem>

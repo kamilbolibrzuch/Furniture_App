@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import SignUp from '../views/account/SignUp.vue'
 import LogIn from '../views/account/LogIn.vue'
+import LogOut from '../views/account/LogOut.vue'
 import HomeView from '../views/HomeView.vue'
 import AddPost from '../views/posts/AddPost.vue'
 import store from '../store' //importujemy store aby sprawdzić nasz state -> czyli czy jesteśmy zalogowani
@@ -10,6 +11,7 @@ const routes = [
 
   { path: '/sign-up', name: 'SignUp', component: SignUp},                             //REJESTRACJA
   { path: '/log-in', name: 'LogIn', component: LogIn},                                //LOGOWANIE
+  { path: '/log-out', name: 'LogOut', component: LogOut},                             //WYLOGOWYWANIE
   { path: '/', name: 'home', component: HomeView,                                     //STRONA GŁÓWNA
     meta: { requireLogin: true }//aby wejść wymagane jest zalogowanie się
   },
