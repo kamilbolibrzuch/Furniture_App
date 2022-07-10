@@ -17,7 +17,7 @@
           <!--Psy-->
           <section class="text-center">
             <h4 class="mb-5">
-              <strong style="font-size: 30px">Ostatnio dodane posty</strong>
+              <strong style="font-size: 30px">Ostatnio dodane posty:</strong>
             </h4>
 
             <LatestPostsComponent></LatestPostsComponent>
