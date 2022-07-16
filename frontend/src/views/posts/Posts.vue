@@ -1,21 +1,23 @@
 <template>
   <div>
-    <navbar></navbar>
+    
     <!-- komponent nawigacji -->
     <div class="home">
-      <div  class=" text-center bg-light" style="height: 13em">
+      <div  class=" text-center"  style="height: 13em; background-color: white;">
+        <br/><br/>
         <h1 style="color:black; font-size: 50px;">Posty</h1>
       </div>
 
       <main class="my-5">
-        <div class="text-center"></div>
-        <section class="text-center">
-          <div class="container-fluid">
-            <div class="row">
-              <div><PostsFetchComponentVue></PostsFetchComponentVue></div>
-            </div>
-          </div>
-        </section>
+        <div class="container">
+          <!--Posty-->
+          <section class="text-center">
+            
+              <PostsFetchComponentVue></PostsFetchComponentVue>
+          </section>
+
+
+        </div>
       </main>
 
       <!--Footer-->
@@ -61,4 +63,7 @@ export default {
 </script>
 
 <style>
+html {
+  overflow-x: hidden;
+}
 </style>

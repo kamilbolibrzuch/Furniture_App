@@ -1,14 +1,19 @@
 <template>
+<navbar v-if="$store.state.isAuthenticated"></navbar>
   <router-view/>
 </template>
 <script>
+import Navbar from "@/components/ui/Navbar.vue";
 import axios from 'axios'
+
 export default{
   data() {
     return{
       authenticated: false
     }
   },
+  components: {
+    Navbar,},
   beforeCreate() {
     this.$store.commit('initializeStore') //commit uruchamia mutations z vuex o nazwie initializeStore
     const token = this.$store.state.token

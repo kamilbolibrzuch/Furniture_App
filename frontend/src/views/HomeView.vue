@@ -1,12 +1,10 @@
 <template>
   <div>
-    <navbar></navbar>
+   
     <!-- komponent nawigacji -->
-    <div class="home">
-      <div class="text-center" id="background_" style="height: 20em">
-        <h1 style=" color: white; padding-top: 25px; font-size: 55px; text-shadow: 2px 2px 4px #000000;">Nazwa firmy
-        </h1>
-        <p style="color: white; padding-top: 175px; font-size: 25px; text-shadow: 2px 2px 4px #000000;">Jakiś napis</p>
+    <div class="home ">
+      <div class="text-center" id="background_" style="height: 10em">
+        <h1 style=" color: rgba(235,0,105,255); padding-top: 25px; font-size: 55px; ">Strona Główna</h1>
       </div>
 
       <br />
@@ -14,10 +12,10 @@
       <!--Głowny layout-->
       <main class="my-5">
         <div class="container">
-          <!--Psy-->
+          <!--Ostatnio dodane Posty-->
           <section class="text-center">
             <h4 class="mb-5">
-              <strong style="font-size: 30px">Ostatnio dodane posty</strong>
+              <strong style="font-size: 30px; color: rgba(0,0,0);">Ostatnio dodane posty:</strong>
             </h4>
 
             <LatestPostsComponent></LatestPostsComponent>
@@ -114,7 +112,7 @@ document.title = "Strona głowna";
 }
     
 #background_ {
-  background-color: rgb(13, 89, 89);
+  background-color: rgb(255, 255, 255);
   background-size: cover;
 }
 

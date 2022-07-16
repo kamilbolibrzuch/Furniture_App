@@ -1,10 +1,24 @@
 <template>
   <div class="row">
+    <div class="container-fluid">
+      <div class="d-flex justify-content-center">
+      <!--~~~~~~~~~~WYSZUKIWANIE  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <form class="d-flex input-group " method="get" @submit.prevent="search" style="width: 320px;" >
+          <input type="text" class="form-control" placeholder="Wyszukaj" aria-label="Wyszukaj" name="query" v-model="query"/>
+          <button class="btn btn-dark" style="background-color: rgba(235,0,105,255);">szukaj</button>
+        </form>
+      <!--~~~~~~~~~~WYSZUKIWANIE  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+      </div>
+    </div>
     <!--~~~~~~~~~~SORTOWANIE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-    <div class="col-lg-10 col-md-7 mb-4 mx-auto">    
-      Sortuj:
-      <div class="col-lg-3 col-md-7 mb-3" style="display: inline-block">
-        <select class="form-control" id="sortowanie" name="sortowanie" @change="sortowanie($event)">
+    
+    <div  class="container">  
+      <br/> 
+      <p style="padding-right: 20%; color: black;">Sortuj:</p>
+        <div class="row">
+      <div class="col"  style="padding-left: 16%;">
+      
+        <select class="form-select-lg"  id="sortowanie" name="sortowanie" @change="sortowanie($event)">
           <option>Data: od najnowszych</option>
           <option>Data: od najstarszych</option>
           <option>Alfabetycznie: A-Z</option>
@@ -12,10 +26,12 @@
         </select>
       </div>
     <!--~~~~~~~~~~WYBÓR WIDOKU~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->  
-    <div class="bar " style="display: inline-block; padding-left: 10px;">
+    <div class="col bar" >
 		<a class="list-icon" v-bind:class="{ 'active': layout == 'list'}" v-on:click="layout = 'list'" data-toggle="tooltip"  title="Widok listy"></a>
 		<a class="grid-icon" v-bind:class="{ 'active': layout == 'grid'}" v-on:click="layout = 'grid'" data-toggle="tooltip"  title="Widok kafelkowy"></a>
 	</div>
+</div>
+<br/>
     <!--~~~~~~~~~~WYBÓR WIDOKU~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ --> 
       <!--~~~~~~~~~~SORTOWANIE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
 
@@ -24,10 +40,9 @@
       <div class="row">
         <ul v-if="layout == 'list'" class="list">
             <li v-for="post in data.results" v-bind:key="post.id" >
-            <router-link v-bind:to="post.get_absolute_url">
-                <div>
-                <a v-bind:to="post.get_absolute_url" target="_blank"><img v-bind:src="post.image.at(-1).get_thumbnail" /></a>
-                <p style="text-decoration: none; color: black">{{post.name}}</p></div>
+            <router-link v-bind:to="post.get_absolute_url" target="_blank">
+                <img v-bind:src="post.image.at(-1).get_thumbnail" />
+                <p style="text-decoration: none; color: black">{{post.name}}</p>
             </router-link>
             </li>
         </ul>
@@ -93,6 +108,7 @@ export default {
       activeClass: "active",
       selected_sort: "",
       layout: 'grid',
+      query: '',
     };
   },
   components: {
@@ -151,7 +167,7 @@ export default {
 }
 
 .bar a.active{
-	background-color:#4a46c1;
+	background-color:rgba(235,0,105,255);
 }
 
 .bar a.list-icon{
@@ -190,6 +206,18 @@ ul.list li p{
 	margin-left: 60%;
 	font-weight: bold;
 	
+}
+.pagination > .active > a
+{
+    color: white;
+    background-color: rgba(235,0,105,255) !Important;
+    border: solid 1px rgba(235,0,105,255) !Important;
+}
+
+.pagination > .active > a:hover
+{
+    background-color: rgba(235,0,105,255) !Important;
+    border: solid 1px rgba(235,0,105,255);
 }
 
 
