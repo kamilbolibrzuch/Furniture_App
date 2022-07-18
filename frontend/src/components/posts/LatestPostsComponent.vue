@@ -133,7 +133,7 @@ export default {
   visibility: hidden;
  
   text-shadow: white 0.1em 0.1em 0.2em;
-   -webkit-text-fill-color: rgb(49, 31, 71);
+   -webkit-text-fill-color: rgb(0,0,0);
   -webkit-text-stroke-color: rgb(255, 255, 255);
   -webkit-text-stroke-width: 0.50px; 
 }
@@ -155,7 +155,7 @@ export default {
 #btn_post {
   color: #ffff;
   text-decoration: none;
-  background: #5b2c6f;
+  background: rgba(190,190,190,255);
   padding: 30px;
   border-radius: 5px;
   display: inline-block;
@@ -163,8 +163,8 @@ export default {
   transition: all 0.4s ease 0s;
 }
 #btn_post:hover {
-  background: #2d57b1;
-  letter-spacing: 1px;
+  background: rgba(235,0,105,255);
+  
   color: aliceblue;
   -webkit-box-shadow: 0 5px 40px -10px rgba(0, 0, 0, 0.57);
   -moz-box-shadow: 0 5px 40px -10px rgba(0, 0, 0, 0.57);
@@ -173,9 +173,9 @@ export default {
 }
 
 #wiecej_postow {
-text-shadow: 2px 2px 4px #000000;
+
   font-size: 50px;
-  color:rgb(88, 77, 149);
+  color:rgba(235,0,105,255);
   padding: 20px 0;
   text-align: center;
   font-family: Roboto, Helvetica, Arial, sans-serif;

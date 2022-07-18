@@ -5,21 +5,25 @@ export default createStore({
     user: {
         username: '',
         id: '',
+        isAuthenticated: false,
+        token: '',
     },
-    isAuthenticated: false,
-    token: '',
-    isLoading: false,
+    search: {
+        query: '',
+    }
+    
+    
   },
   getters: {
   },
   mutations: { //nie możemy w state zmienić danych i robimy to w mutations
     initializeStore(state) { //funkcja inicjalizujaca nasz local Storage
         if (localStorage.getItem('token')) { //token użytkownika bedzie zapisany w localstorage gdyby wył przeglądarke itd..
-            state.token = localStorage.getItem('token') // przypisanie tokenu
-            state.isAuthenticated = true //jeli mamy token to mamy autoryzacje
+            state.user.token = localStorage.getItem('token') // przypisanie tokenu
+            state.user.isAuthenticated = true //jeli mamy token to mamy autoryzacje
         } else {
-            state.token = '' //upewniamy się że token jest napewno pusty  
-            state.isAuthenticated = false //brak autoryzacji
+            state.user.token = '' //upewniamy się że token jest napewno pusty  
+            state.user.isAuthenticated = false //brak autoryzacji
         }
         if (localStorage.getItem('username')) {
             state.user.username = localStorage.getItem('username')
@@ -34,12 +38,12 @@ export default createStore({
             state.user.id = ''
         }},
         setToken(state, token) { //funkcja przypisująca token przy zalogowaniu
-          state.token = token
-          state.isAuthenticated = true
+          state.user.token = token
+          state.user.isAuthenticated = true
       },
 
       removeToken(state) { //funkcja usuwajaca token przy wylogowaniu
-          state.token = ''
+          state.user.token = ''
           state.isAuthenticated = false
       },
 
@@ -50,12 +54,20 @@ export default createStore({
           state.user.username = username
       },
 
+      setQuery(state, query){//podczas korzystania z wyszukiwarki
+        state.search.query = query
+      },
+      removeQuery(state) {
+        state.search.query = ''
+      },
+
+
 
       LogOutUser(state){
         state.user.username='';
         state.user.id=0;
-        state.token = '';
-        state.isAuthenticated=false;
+        state.user.token = '';
+        state.user.isAuthenticated=false;
         localStorage.removeItem('token');
         localStorage.removeItem('username');
         localStorage.removeItem('profile_slug')

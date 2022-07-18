@@ -1,7 +1,7 @@
 <template>
 
-    <MDBNavbar expand="lg" dark container style="background-color: #2b9788;">
-    <MDBNavbarBrand href="/" id="Logo">Jakaś firma</MDBNavbarBrand>
+    <MDBNavbar expand="lg" dark container style="background-color: rgba(190,190,190,255);">
+    <MDBNavbarBrand href="/" id="Logo"><img src="../../assets/logo.png" style="height: 40px;" alt="logo" ></MDBNavbarBrand>
     
     <MDBNavbarToggler @click="collapse1 = !collapse1" target="#navbarSupportedContent">
     </MDBNavbarToggler>
@@ -14,17 +14,11 @@
           <router-link to="/posts/1/order_by=from-newest" style="color:white;">Przeglądaj posty</router-link>
         </MDBNavbarItem>
         <MDBNavbarNav>
-        <MDBNavbarItem>
-          <!-- Navbar dropdown -->
-          <MDBDropdown class="nav-item" v-model="dropdown1">
-            <MDBDropdownToggle tag="a" class="nav-link" @click="dropdown1 = !dropdown1">
-              </MDBDropdownToggle>
-            <MDBDropdownMenu aria-labelledby="dropdownMenuButton">
-              <MDBDropdownItem :href="'/log-out'"><router-link :to="'/log-out'" style="color:black;">Wyloguj</router-link></MDBDropdownItem>
-            </MDBDropdownMenu>
-          </MDBDropdown>
-        </MDBNavbarItem>
+
         </MDBNavbarNav>
+                <MDBNavbarItem to="/log-out" >
+          <router-link to="/log-out" style="color:white;">Wyloguj</router-link>
+        </MDBNavbarItem>
 
       </MDBNavbarNav>
       
@@ -79,6 +73,11 @@ export default {
       }
       
     },
+    data () {
+  return {
+    publicPath: process.env.BASE_URL
+  }
+}
     
 
 
@@ -90,18 +89,6 @@ export default {
 </script>
 
 <style>
-#Logo{
-  font-family: 'Molle', cursive;
-  font-weight: bold;
-}
-#ikona{
-   transition: transform 0.5s ease-in-out;
-   
-}
-#ikona:hover{
-  transform: translate(0px,5px) rotateZ(180deg);
-  
-  
-}
+
 </style>
 

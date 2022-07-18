@@ -7,7 +7,6 @@ import AddPost from '../views/posts/AddPost.vue'
 import store from '../store' //importujemy store aby sprawdzić nasz state -> czyli czy jesteśmy zalogowani
 import PostDetail from '../views/posts/PostDetail.vue'
 import Posts from '../views/posts/Posts.vue'
-
 const routes = [
 
   { path: '/sign-up', name: 'SignUp', component: SignUp},                             //REJESTRACJA
@@ -33,7 +32,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => { //zanim router wykonana jakieś przekierowanie na inną stronę
-  if (to.matched.some(record => record.meta.requireLogin) && !store.state.isAuthenticated) { //jeśli strona wymaga logowania i nie jesteśmy authentykowwani
+  if (to.matched.some(record => record.meta.requireLogin) && !store.state.user.isAuthenticated) { //jeśli strona wymaga logowania i nie jesteśmy authentykowwani
       next('/log-in') //to przenieś nas z automatu na stronę logowania
   } else {
       next() //jeśli jesteśmy zalogowani to przenieś na stronę docelową

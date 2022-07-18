@@ -9,6 +9,7 @@ from datetime import datetime
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator
 from django.db.models import Q
+from rest_framework.decorators import api_view
 
 #???????????? POBIERANIE 7 NAJNOWSZYCH NA STRONĘ GŁÓWNĄ ????????????????????????????????????????????????????????????????????????????????????????
 class LatestPostsList(APIView):                                         #pobieranie ostatnio dodanych
@@ -28,6 +29,22 @@ class AddPost(APIView):
             post.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)        #dodano
         return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)   #błędne dane
+#~~~~~~~~~~~~~~~~~~~~~~~DODAWANIE ZDJĘĆ DO POSTÓW ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+class AddPostImages(APIView):
+    def post(self, request, format=None):
+        post = Post.objects.latest('id').id                         #dodaje do ostatnio dodanego postu (ostatnie id)
+        images=request.FILES.getlist('image')                       #tworzy listę zdjęć
+        img_table = []                                              #tablica na obiekty
+        for image in images:                                        #dla każdego zdjęcia
+            post_photo = Photo.objects.create(                      #tworzy nowy obiekt zdjęcia
+                post=Post.objects.latest('id'),
+                image=image,
+                name=image.name)
+            post_photo.save()                                        #zapisuje go
+            img_table.append(post_photo)                             #dodaje obiekty do tablicy
+            
+        serializer = PostPhotosSerializer(img_table,many=True )      #serializuje
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 #!!!!!!!!!!!!!!!!!!!!!!POBIERANIE POSTÓW Z PAGINACJĄ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 class GetPosts(APIView):
     def post(self, request, format=None):
@@ -51,6 +68,36 @@ class GetPosts(APIView):
         data['page_numbers'] = paginator.num_pages                                      #zwracamy informacje ile wszystkich ,,podstron" jeszcze istnieje
         data['next_page'] = False if int(page_number) >= paginator.num_pages else True  #zwracamy informacje że istnieje kolejna podstrona do której możemy przejść
         return Response(data, status=status.HTTP_200_OK)                                #poprawnie pobrano
+#~~~~~~~~~~~~~~~~~~~~~~~WYSZKIWANIE NA PODSTAWIE PODANEGO QUERY ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+class Search(APIView):
+    def post(self, request, format=None):
+        query = self.request.data.get('query', '')           #pobieranie query
+        if query:
+            order_by = self.request.query_params.get('order_by') 
+            if order_by == 'from-newest': 
+                posts = Post.objects.filter(Q(name__icontains=query) | Q(description__icontains=query)).all()  #Queryset filtruje po wskazanych polach i zwraca zgadzające się wyniki 
+            if order_by == 'from-oldest': 
+               posts = Post.objects.filter(Q(name__icontains=query) | Q(description__icontains=query)).all().order_by('date_added')
+            if order_by == 'alphabetical':
+                posts = Post.objects.filter(Q(name__icontains=query) | Q(description__icontains=query)).all().order_by('name') 
+            if order_by == 'alphabetical-reverse':
+                posts = Post.objects.filter(Q(name__icontains=query) | Q(description__icontains=query)).all().order_by('-name')          
+            posts_list = list(posts)    #prrzekonwertowanie na listę
+            page_number = self.request.query_params.get('page_number', 1)
+            page_size = self.request.query_params.get('page_size', 10)
+            paginator = Paginator(posts_list, page_size)
+            serializer = PostSerializer(paginator.page(page_number), many=True)
+            next_page = False if int(page_number) >= paginator.num_pages else True
+            data={}
+            data['results'] = serializer.data
+            data['page_numbers'] = paginator.num_pages
+            data['page_size'] = page_size
+            data['next_page'] = next_page
+
+            return Response(data, status=status.HTTP_200_OK)
+        else:
+            return Response({"results": []})
+
 #**********************POBIERANIE KONKRETNEGO POSTU NA PODSTAWIE SLUG'A *************************************************************************
 class PostDetail(APIView):
     def get_object(self, post_slug):
@@ -60,25 +107,10 @@ class PostDetail(APIView):
             raise Http404
     def get(self, request, post_slug, format=None):
         post = self.get_object(post_slug)
-        print(post)
+        
         serializer = PostSerializer(post)
         return Response(serializer.data, status.HTTP_200_OK)
 
 
-#~~~~~~~~~~~~~~~~~~~~~~~DODAWANIE ZDJĘĆ DO POSTÓW ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-class AddPostImages(APIView):
-    def post(self, request, format=None):
-        post = Post.objects.latest('id').id                         #dodaje do ostatnio dodanego postu (ostatnie id)
-        images=request.FILES.getlist('image')                       #tworzy listę zdjęć
-        img_table = []                                              #tablica na obiekty
-        for image in images:                                        #dla każdego zdjęcia
-            post_photo = Photo.objects.create(                      #tworzy nowy obiekt zdjęcia
-                post=Post.objects.latest('id'),
-                image=image,
-                name=image.name)
-            post_photo.save()                                        #zapisuje go
-            img_table.append(post_photo)                             #dodaje obiekty do tablicy
-            
-        serializer = PostPhotosSerializer(img_table,many=True )      #serializuje
-        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
         

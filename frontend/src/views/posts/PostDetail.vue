@@ -1,11 +1,11 @@
 <template>
   <div>
-  <navbar></navbar>
+  
     <!-- komponent nawigacji -->
     <body>
       <div class="main-content" id="background">
         <!-- Header -->
-        <div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center" style=" height: 200px; background-color: blue; background-size: cover; background-position: center top; ">
+        <div class="header pb-8 pt-5 pt-lg-8 d-flex align-items-center" style=" height: 200px; background-color: rgba(235,0,105,255); background-size: cover; background-position: center top; ">
           <!-- Mask -->
           <div class="container-fluid d-flex align-items-center">
             <div class="row">

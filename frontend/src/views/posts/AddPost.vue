@@ -1,7 +1,6 @@
 <template>
   <div>
-    <navbar></navbar>
-    <!-- komponent nawigacji -->
+    
     <div class="container-fluid ps-md-0">
       <div class="row g-0">
         <div class="d-none d-md-flex col-md-5 col-lg-6 mx-auto"></div>

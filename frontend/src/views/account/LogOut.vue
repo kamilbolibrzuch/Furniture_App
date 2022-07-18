@@ -14,7 +14,7 @@ export default {
     },
     methods: {
         async LogOut(){
-            this.$store.commit({type:'LogOutUser'})
+            this.$store.commit({type:'LogOutUser'}) //metoda w storze odpowiedzialna za wylogowanie
                            window.location.href = "/" // po wylogowaniu jeśli wszystko się udało przenosimy na strone dashboard
         }
     }
