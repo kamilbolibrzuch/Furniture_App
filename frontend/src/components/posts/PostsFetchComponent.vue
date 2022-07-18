@@ -1,10 +1,17 @@
 <template>
   <div class="row">
     <div class="container-fluid">
+      <div v-if="searching">
+        <div  class="p-5 text-center bg-light">
+          <h1 class="mb-3 h2"> Wyszukiwana fraza: "<b>{{ query }}</b>"</h1>
+            </div>
+            <br />
+          </div>
       <div class="d-flex justify-content-center">
+                    
       <!--~~~~~~~~~~WYSZUKIWANIE  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <form class="d-flex input-group " method="get" @submit.prevent="search" style="width: 320px;" >
-          <input type="text" class="form-control" placeholder="Wyszukaj" aria-label="Wyszukaj" name="query" v-model="query"/>
+        <form class="d-flex input-group" @submit.prevent="Search" style="width: 320px;" >
+          <input type="text" class="form-control" placeholder="Wyszukaj" aria-label="Wyszukaj" name="query" id="query" v-model="query" v-on:input="reset" />
           <button class="btn btn-dark" style="background-color: rgba(235,0,105,255);">szukaj</button>
         </form>
       <!--~~~~~~~~~~WYSZUKIWANIE  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
@@ -40,7 +47,7 @@
       <div class="row">
         <ul v-if="layout == 'list'" class="list">
             <li v-for="post in data.results" v-bind:key="post.id" >
-            <router-link v-bind:to="post.get_absolute_url" target="_blank">
+            <router-link v-bind:to="post.get_absolute_url" >
                 <img v-bind:src="post.image.at(-1).get_thumbnail" />
                 <p style="text-decoration: none; color: black">{{post.name}}</p>
             </router-link>
@@ -49,7 +56,10 @@
         <br />
         <br />
         <h2 v-if="data.results == ''" style="color: red">
-            Niestety nie znaleziono żadnych wyników, dla zastosowanych filtrów.
+            Niestety nie znaleziono żadnych wyników.
+        </h2>
+        <h2 v-if="data.results == ''&& searching" style="color: red">
+            Upewnij się że wpisana fraza jest poprawna i spróbuj ponownie.
         </h2>
         <br />
       <!--~~~~~~~~~~WIDOK LISTY~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
@@ -109,31 +119,26 @@ export default {
       selected_sort: "",
       layout: 'grid',
       query: '',
+      searching: false
     };
   },
-  components: {
-    MDBCard,
-    MDBCardBody,
-    MDBCardTitle,
-    MDBCardText,
-    MDBCardImg,
-    MDBBtn,
-  },
+  components: { MDBCard, MDBCardBody, MDBCardTitle, MDBCardText, MDBCardImg, MDBBtn, },
   mounted() {
     this.order_by = this.$route.params.order_by;
     if (this.order_by === "order_by=from-newest" || this.order_by ==="from-newest") { document.getElementById("sortowanie").options[0].setAttribute("selected", true); this.order_by="from-newest";}     //ustawienie na selectcie wybranej opcji zgodnie z parametrem  oraz ustawienie
     if (this.order_by === "order_by=from-oldest" || this.order_by ==="from-oldest") { document.getElementById("sortowanie").options[1].setAttribute("selected", true); this.order_by="from-oldest";}     // order by aby nie występowało podójnie tj. order_by=from-newest&order_by=from-newest
     if (this.order_by === "order_by=alphabetical" || this.order_by ==="alphabetical") { document.getElementById("sortowanie").options[2].setAttribute("selected", true); this.order_by="alphabetical";}     
     if (this.order_by === "order_by=alphabetical-reverse" || this.order_by ==="alphabetical-reverse") { document.getElementById("sortowanie").options[3].setAttribute("selected", true); this.order_by="alphabetical-reverse";} 
-    this.getPosts();
+    
+    this.query = this.$store.state.search.query;
+    if(this.query!= ''){this.Search();}else{this.getPosts();}
+    if(this.query== ''){this.$store.commit("removeQuery");}
   },
   methods: {
     async getPosts() {
 
       await axios
-        .post(
-          `api/furniture_app/posts/?page_number=${this.$route.params.pagenumber}&page_size=${this.pagesize}&order_by=${this.order_by}`
-        )
+        .post(`api/furniture_app/posts/?page_number=${this.$route.params.pagenumber}&page_size=${this.pagesize}&order_by=${this.order_by}` )
         .then((response) => {
           this.data = response.data;
         })
@@ -141,20 +146,45 @@ export default {
           console.log(error);
         });
     },
+    
+    async Search(){
+      if(this.query==''){this.$store.commit("removeQuery"); this.getPosts();}else{
+      await axios
+        .post(`api/furniture_app/posts/search/?page_number=${this.$route.params.pagenumber}&page_size=${this.pagesize}&order_by=${this.order_by}`,
+        { query: this.query }, )
+        .then((response) => {
+          this.data = response.data;
+          this.searching = true;
+          this.$store.commit("setQuery", this.query);
+          console.log(this.data);
+          
+          
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      }
+
+    },
+    reset(){this.searching=false;},
     sortowanie(event) {
         this.selected_sort = event.target.value;
         if(this.selected_sort === "Data: od najnowszych"){this.order_by = "from-newest"}
         if(this.selected_sort === "Data: od najstarszych"){this.order_by = "from-oldest"}
         if(this.selected_sort === "Alfabetycznie: A-Z"){this.order_by = "alphabetical"}
         if(this.selected_sort === "Alfabetycznie: Z-A"){this.order_by = "alphabetical-reverse"}
-        this.getPosts();
+        if(this.query!= ''){this.Search();}else{this.getPosts();}
     }
   },
 };
 </script>
 
-<style>
 
+
+<style>
+/*-------------------------
+	Wybo widoku (kafelki/lista)
+--------------------------*/
 .bar a{
 	background:#bebebe center center no-repeat;
 	width:35px;
@@ -207,6 +237,9 @@ ul.list li p{
 	font-weight: bold;
 	
 }
+/*---------------------
+  Paginacja
+------------------------*/
 .pagination > .active > a
 {
     color: white;

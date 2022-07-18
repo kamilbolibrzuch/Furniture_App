@@ -1,5 +1,5 @@
 <template>
-<navbar v-if="$store.state.isAuthenticated"></navbar>
+<navbar v-if="$store.state.user.isAuthenticated"></navbar>
   <router-view/>
 </template>
 <script>
@@ -16,7 +16,7 @@ export default{
     Navbar,},
   beforeCreate() {
     this.$store.commit('initializeStore') //commit uruchamia mutations z vuex o nazwie initializeStore
-    const token = this.$store.state.token
+    const token = this.$store.state.user.token
     
     if (token) {
       axios.defaults.headers.common['Authorization'] = "Token" + token
