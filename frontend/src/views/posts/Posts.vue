@@ -5,7 +5,7 @@
     <div class="home">
       <div  class=" text-center"  style="height: 13em; background-color: white;">
         <br/><br/>
-        <h1 style="color:black; font-size: 50px;">Posty</h1>
+        <h1 style="color:black; font-size: 50px;">Raporty</h1>
       </div>
 
       <main class="my-5">
@@ -53,7 +53,7 @@ export default {
     MDBBtn,
   },
   mounted() {
-    document.title = "Posty";
+    document.title = "Raporty";
   },
   methods: {},
   directives: {

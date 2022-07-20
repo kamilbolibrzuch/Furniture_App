@@ -25,7 +25,7 @@
             <router-link to="/posts/1/order_by=from-newest" >
               <div class="bg-image">
                 <div  id="zdj_wiecej" class="img-fluid">
-                  <div id="wiecej_postow"><b><br>Zobacz więcej<br>postów</b></div>
+                  <div id="wiecej_postow"><b><br>Zobacz więcej<br>raportów</b></div>
                 </div>
               </div>
               <MDBCardBody class="card-body">

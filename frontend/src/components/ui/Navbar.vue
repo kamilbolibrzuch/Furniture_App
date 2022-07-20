@@ -8,10 +8,10 @@
     <MDBCollapse v-model="collapse1" id="navbarSupportedContent">
       <MDBNavbarNav center class="mb-2 mb-lg-0">
         <MDBNavbarItem to="/add-post" >
-          <router-link to="/add-post" style="color:white;">Dodaj post</router-link>
+          <router-link to="/add-post" style="color:white;">Dodaj raport</router-link>
         </MDBNavbarItem>
         <MDBNavbarItem to="/posts/1/order_by=from-newest" >
-          <router-link to="/posts/1/order_by=from-newest" style="color:white;">Przeglądaj posty</router-link>
+          <router-link to="/posts/1/order_by=from-newest" style="color:white;">Przeglądaj raporty</router-link>
         </MDBNavbarItem>
         <MDBNavbarNav>
 

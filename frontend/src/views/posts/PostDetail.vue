@@ -106,7 +106,7 @@ export default {
   },
   beforeMount() {},
   mounted() {
-    document.title = "Szczegóły Posta";
+    document.title = "Szczegóły Raportu";
     this.getPost();
   },
   methods: {
@@ -136,3 +136,8 @@ export default {
   },
 };
 </script>
+<style>
+html {
+  overflow-x: hidden;
+}
+</style>

@@ -82,6 +82,14 @@ DJOSER = {
     },
 }
 
+EMAIL_HOST ='smtp.gmail.com'
+EMAIL_HOST_USER = 'furnitureapp.pl@gmail.com'
+EMAIL_HOST_PASSWORD = 'hzddpiptmywrapqz'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+DOMAIN = "furnitureapp.pl"
+SITE_NAME = 'FurnitureApp'
+
 ROOT_URLCONF = 'backend.urls'
 
 TEMPLATES = [
