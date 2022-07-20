@@ -15,7 +15,7 @@
           <!--Ostatnio dodane Posty-->
           <section class="text-center">
             <h4 class="mb-5">
-              <strong style="font-size: 30px; color: rgba(0,0,0);">Ostatnio dodane posty:</strong>
+              <strong style="font-size: 30px; color: rgba(0,0,0);">Ostatnio dodane raporty:</strong>
             </h4>
 
             <LatestPostsComponent></LatestPostsComponent>

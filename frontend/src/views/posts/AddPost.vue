@@ -9,14 +9,14 @@
             <div class="container">
               <div class="row">
                 <div class="col-md-9 col-lg-8 mx-auto">
-                  <h3 v-if="!alert" class="login-heading mb-4" style=" font-family: 'Libre Baskerville', serif; font-size: 250%;"> Dodaj Post </h3>
+                  <h3 v-if="!alert" class="login-heading mb-4" style=" font-family: 'Libre Baskerville', serif; font-size: 250%;"> Dodaj Raport </h3>
                   <!-- Alert -->
                   <div class="alert alert-info" v-if="alert">
                     <p>
-                      <br /> Post został utworzony!<br /> Przejdź na stronę
+                      <br /> Raport został utworzony!<br /> Przejdź na stronę
                       <b><router-link to="/">główną.</router-link></b>
                       <br />
-                      Twój post pojawi się w sekcji ostatnio dodane posty.
+                      Twój post pojawi się w sekcji ostatnio dodane rapoty.
                     </p>
                   </div>
                   <!-- Alert -->
@@ -41,7 +41,7 @@
                   <div class="container">
                     <div class="form-group">
                       <div class="input-group mb-3">
-                        <input type="file" class="form-control" accept=".jpg,.jpeg,.png" @change="handleFileUpload($event)" multiple />
+                        <input type="file" class="form-control" accept=".jpg,.jpeg,.png" @change="handleFileUpload($event)" multiple required/>
                       </div>
                       <div class="image-preview" v-if="imagePreview.length > 0">
                         <img class="preview" :src="imagePreview" />
@@ -56,7 +56,7 @@
                     </p>
                     <br />
                     <div class="d-grid">
-                      <MDBBtn class="btn btn-lg" rounded type="submit" style="background-color: #4be1e1; color: white">Dodaj post</MDBBtn>
+                      <MDBBtn class="btn btn-lg" rounded type="submit" style="background-color: #4be1e1; color: white">Dodaj raport</MDBBtn>
                     </div>
                   </form>
                   <!-- Formularz -->
@@ -93,11 +93,11 @@ export default {
     };
   },
   mounted() {
-    document.title = "Dodaj Post";
+    document.title = "Dodaj Raport";
   },
   computed: {
     getToken() {
-      return this.$store.state.token;
+      return this.$store.state.user.token;
     },
   },
   methods: {
@@ -110,7 +110,7 @@ export default {
       axios
         .post(`/api/furniture_app/add-post/`, formData, {
           headers: {
-            Authorization: `Token ${this.$store.state.token}`,
+            Authorization: `Token ${this.$store.state.user.token}`,
           },
         })
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!/      
@@ -126,7 +126,7 @@ export default {
         axios
           .post(`/api/furniture_app/add-post/image/`, imageformData, {
           headers: {
-            Authorization: `Token ${this.$store.state.token}`,
+            Authorization: `Token ${this.$store.state.user.token}`,
           },
         })
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/               

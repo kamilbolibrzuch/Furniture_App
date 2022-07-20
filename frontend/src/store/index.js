@@ -44,7 +44,7 @@ export default createStore({
 
       removeToken(state) { //funkcja usuwajaca token przy wylogowaniu
           state.user.token = ''
-          state.isAuthenticated = false
+          state.user.isAuthenticated = false
       },
 
       setUserId(state, id) {
