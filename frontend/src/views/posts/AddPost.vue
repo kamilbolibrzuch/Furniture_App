@@ -1,6 +1,5 @@
 <template>
   <div>
-    
     <div class="container-fluid ps-md-0">
       <div class="row g-0">
         <div class="d-none d-md-flex col-md-5 col-lg-6 mx-auto"></div>
@@ -9,46 +8,56 @@
             <div class="container">
               <div class="row">
                 <div class="col-md-9 col-lg-8 mx-auto">
-                  <h3 v-if="!alert" class="login-heading mb-4" style=" font-family: 'Libre Baskerville', serif; font-size: 250%;"> Dodaj Raport </h3>
-                  <!-- Alert -->
+                  <h3 v-if="!alert" class="login-heading mb-4" style=" font-family: 'Libre Baskerville', serif; font-size: 250%;">Dodaj Raport</h3>
+<!-- Alert informujacy o dodaniu raportu-->
                   <div class="alert alert-info" v-if="alert">
                     <p>
-                      <br /> Raport został utworzony!<br /> Przejdź na stronę
+                      <br />
+                      Raport został utworzony!<br />
+                      Przejdź na stronę
                       <b><router-link to="/">główną.</router-link></b>
                       <br />
                       Twój post pojawi się w sekcji ostatnio dodane rapoty.
                     </p>
                   </div>
-                  <!-- Alert -->
-                  <!-- Formularz -->
+<!-- Alert -->
+<!-- Formularz -->
                   <form @submit.prevent="submitForm" enctype="multipart/form-data" v-if="!alert">
                     <div class="form-floating mb-3">
                       <div class="form__group">
                         <input type="text" id="postname" class="form__field" placeholder="Nazwa postu" v-model="name" required />
-                        <label for="catname" class="form__label">* Nazwa postu</label>
+                        <label for="postname" class="form__label">* Nazwa postu</label>
                       </div>
                     </div>
 
                     <div class="form-floating mb-3">
                       <div class="form__group">
-                        <textarea id="description" class="form-control" rows="5"
-                          placeholder="* Opis: " v-model="description" required>
+                        <textarea id="description" class="form-control" rows="5" placeholder="* Opis: " v-model="description" required>
                         </textarea>
                       </div>
                     </div>
 
                     <br /><br />
-                  <div class="container">
-                    <div class="form-group">
-                      <div class="input-group mb-3">
-                        <input type="file" class="form-control" accept=".jpg,.jpeg,.png" @change="handleFileUpload($event)" multiple required/>
-                      </div>
-                      <div class="image-preview" v-if="imagePreview.length > 0">
-                        <img class="preview" :src="imagePreview" />
+
+                    <input id="file-upload" type="file" class="form-control" accept=".jpg,.jpeg,.png" multiple @change="uploadImage" required/>
+                    <div v-for="(image, key) in images" :key="key" class="wrapper-thumb" >
+                      <div id="img-preview">
+                        <img :src="'image'" ref="image" class="img-preview-thumb" alt="zdj"  v-on:click=" (e) => e.target.classList.toggle('Imgpreview-zoom')"/>
+                        <div  @click="removeImage(image, key)"><i class="fas fa-times-circle fa-xl remove-btn"></i></div>
                       </div>
                     </div>
+                <br />
+<!-- Alert jeśli usuneliśmy wszystkie zdjęcia (ww podglądzie)-->
+                <div class="alert alert-danger" v-if="noImagesAlert">
+                    <p>
+                      <br />
+                      Usunięto wszystkie zdjęcia!<br />
+                      Musisz dodać zdjęcie aby utworzyć raport.
+                      <br />
+                    </p>
                   </div>
-
+<!-- Alert -->
+                    <br />
                     <p style="color: #9b9b9b">
                       * Pola oznaczone gwiazdką są obowiązkowe do poprawnego
                       wypełnienia formularza, jeśli pole nie jest obowiązkowe
@@ -73,23 +82,25 @@
 <script>
 import FormData from "form-data";
 import axios from "axios";
-import { MDBBtn, MDBInput } from "mdb-vue-ui-kit";
+import { MDBBtn} from "mdb-vue-ui-kit";
 import Navbar from "@/components/ui/Navbar.vue";
+import $ from "jquery";
 export default {
   name: "AddPost",
   components: {
     MDBBtn,
-    MDBInput,
     Navbar,
   },
   data() {
     return {
       name: "",
       description: "",
-      image: null,
+      images: [],
       token: "",
       imagePreview: "",
       alert: false,
+      noImagesAlert: false,
+      used_input: 0
     };
   },
   mounted() {
@@ -102,7 +113,9 @@ export default {
   },
   methods: {
     submitForm() {
-  //!!!!!!NAJPIERW DODANIE DO POSTA/////////////////////////////
+      if(this.images.length==0){this.noImagesAlert = true;}
+      else{this.noImagesAlert=false;
+      //!!!!!!NAJPIERW DODANIE DO POSTA/////////////////////////////
       let formData = new FormData();
       formData.append("name", this.name);
       formData.append("description", this.description);
@@ -113,39 +126,61 @@ export default {
             Authorization: `Token ${this.$store.state.user.token}`,
           },
         })
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!/      
+        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!/
         .then((res) => {
           console.log(res);
-//~~~~~~~~~~~NASTEPNIE DODANIE ZDJEĆ/////////////////////////////////          
+          //~~~~~~~~~~~NASTEPNIE DODANIE ZDJEĆ/////////////////////////////////
           let imageformData = new FormData();
-          for (const i of Object.keys(this.image))
-          {
-            imageformData.append("image", this.image[i]);
-            imageformData.append("name", this.image[i].name);
+          for (const i of Object.keys(this.images)) {
+            //imageformData.append("image", this.image[i]);
+            imageformData.append("image", this.images[i]);
+            imageformData.append("name", this.images[i].name);
           }
-        axios
-          .post(`/api/furniture_app/add-post/image/`, imageformData, {
-          headers: {
-            Authorization: `Token ${this.$store.state.user.token}`,
-          },
+          axios
+            .post(`/api/furniture_app/add-post/image/`, imageformData, {
+              headers: {
+                Authorization: `Token ${this.$store.state.user.token}`,
+              },
+            })
+            //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/
+            .then((res) => {
+              console.log(res);
+              this.alert = true;
+            })
+            .catch((error) => {
+              console.log(error);
+            });
         })
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/               
-        .then((res) => {
-          console.log(res);
-          this.alert = true;
-          })
-        .catch((error) => {
-          console.log(error);
-        });
-          
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+        .catch((error) => { console.log(error); });
+      }
     },
-    
-    handleFileUpload(event) {
-      this.image = event.target.files
+    uploadImage(e) {
+      this.noImagesAlert=false;
+      this.images.length=0;
+      this.refreshImg();
+      let selectedFiles = e.target.files;
+      for (let i = 0; i < selectedFiles.length; i++) {
+        this.images.push(selectedFiles[i]);
+      }
+      this.refreshImg();
+      
+    },
+    refreshImg() {
+      if(this.images.length!=0){
+      for (let i = 0; i < this.images.length; i++) {
+        let reader = new FileReader();
+        reader.onload = (e) => {
+          this.$refs.image[i].src = reader.result;
+        };
+        reader.readAsDataURL(this.images[i]);
+      }
+      }
+    },
+    removeImage(image, index) {
+      if(this.images.length!=0){
+      this.images.splice(index, 1);
+      this.refreshImg();
+      }
     },
   },
 };
@@ -162,13 +197,6 @@ export default {
   height: 200px;
   position: absolute;
   cursor: pointer;
-}
-
-img.preview {
-  width: 300px;
-  background-color: white;
-  border: 1px solid black;
-  padding: 5px;
 }
 
 .my-select {
@@ -228,8 +256,69 @@ label,
   border-bottom: 2px solid #009788;
 }
 
+/*img-podgląd*/
 
+.img-thumbs {
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  margin: 2.5rem 0;
+  padding: 1.75rem;
 
+  border-radius: 10px;
+  cursor: zoom-in;
+}
+.img-thumbs-hidden {
+  display: none;
+}
 
+.wrapper-thumb {
+  position: relative;
+  display: inline-block;
+  margin-left: 3rem;
+  margin-top: 1rem;
 
+  justify-content: space-around;
+}
+/**/
+
+img.Imgpreview-zoom {
+  -ms-transform: scale(1.9);
+  -webkit-transform: scale(1.9);
+  transform: scale(1.9);
+  z-index: 1090 !important;
+  cursor: zoom-out !important;
+  position: relative;
+}
+
+.img-preview-thumb {
+  background: #fff;
+  border: 1px solid none;
+  border-radius: 0.25rem;
+  box-shadow: 0.125rem 0.125rem 0.0625rem rgba(0, 0, 0, 0.12);
+  margin-right: 1rem;
+  margin-left: 15%;
+  margin-top: 1rem;
+  max-width: 200px;
+  padding: 0.25rem;
+  cursor: zoom-in;
+
+}
+
+.remove-btn {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  top: 15px;
+  right: -18px;
+
+  cursor: pointer;
+  color: red;
+}
+
+.remove-btn:hover {
+  box-shadow: 0px 0px 3px grey;
+  transition: all 0.3s ease-in-out;
+}
 </style>
